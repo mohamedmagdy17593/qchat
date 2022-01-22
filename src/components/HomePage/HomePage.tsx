@@ -1,9 +1,12 @@
+import dynamic from 'next/dynamic';
 import React from 'react';
+
+const Connection = dynamic(() => import('./Connection'), { ssr: false });
 
 function HomePage() {
   return (
     <div>
-      <h1 className="text-2xl">Hello</h1>
+      <Connection />
     </div>
   );
 }
