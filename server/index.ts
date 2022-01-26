@@ -7,9 +7,7 @@ import morgan from 'morgan';
 import { Server, Socket } from 'socket.io';
 import http from 'http';
 
-// routes import
-// import authRouter from './routes/auth';
-// import sitesRouter from './routes/sites';
+import { httpApiHandler } from './apihandler';
 
 const dev = process.env.NODE_ENV !== 'production';
 const appUi = next({ dev });
@@ -40,12 +38,7 @@ const port = process.env.PORT || 3000;
     /**
      * Routes
      */
-    // app.use(`/api`, authRouter);
-    // app.use(`/api/sites`, sitesRouter);
-
-    app.get('/hola', (req, res) => {
-      res.send(`Hello`);
-    });
+    app.use(`/api`, httpApiHandler);
 
     /**
      * Handle Nextjs Requests

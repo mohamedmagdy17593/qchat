@@ -27,7 +27,7 @@ function NewPage() {
             <label className="inline-flex items-center">
               <input
                 type="checkbox"
-                className="form-checkbox h-5 w-5 rounded bg-transparent text-green-600 focus:ring-green-600 "
+                className="form-checkbox h-5 w-5  rounded !border-neutral-600 bg-transparent text-green-600 focus:ring-green-600 "
               />
               <span className="ml-2 text-neutral-500">Only audio</span>
             </label>
