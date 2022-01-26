@@ -1,13 +1,16 @@
 import React from 'react';
+import RoomCanvas from './RoomCanvas';
 import RoomFooter from './RoomFooter';
+import { RoomStateProvider } from './RoomState';
 
 function Room() {
   return (
-    <div className=" grid h-screen grid-rows-[1fr,auto]">
-      <div className="flex-1">{/* video Chat */}</div>
-
-      <RoomFooter />
-    </div>
+    <RoomStateProvider>
+      <div className="grid h-screen select-none grid-rows-[1fr,auto]">
+        <RoomCanvas />
+        <RoomFooter />
+      </div>
+    </RoomStateProvider>
   );
 }
 

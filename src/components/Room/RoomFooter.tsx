@@ -1,11 +1,20 @@
 import React from 'react';
 import { useCurrentTime } from './utils';
 import { MdCallEnd, MdPresentToAll } from 'react-icons/md';
-import { BsCameraVideo, BsChatLeftText, BsMic } from 'react-icons/bs';
+import {
+  BsCameraVideo,
+  BsChatRightText,
+  BsChatRightTextFill,
+  BsMic,
+} from 'react-icons/bs';
 import { FiMoreVertical, FiSettings, FiUsers } from 'react-icons/fi';
 import Tooltip from '../common/Tooltip/Tooltip';
+import { useRoomDispatch, useRoomState } from './RoomState';
 
 function RoomFooter() {
+  let roomState = useRoomState();
+  let dispatch = useRoomDispatch();
+
   return (
     <div className="grid h-20 select-none grid-cols-[1fr,auto,1fr] items-center px-5 text-white">
       <div className="flex items-center gap-4 ">
@@ -51,8 +60,20 @@ function RoomFooter() {
           </button>
         </Tooltip>
         <Tooltip content="Chat with everyone">
-          <button className="flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800">
-            <BsChatLeftText />
+          <button
+            className="flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
+            onClick={() => {
+              dispatch({
+                type: 'SET_CHAT_IS_OPEN',
+                payload: { chatIsOpen: !roomState.chatIsOpen },
+              });
+            }}
+          >
+            {roomState.chatIsOpen ? (
+              <BsChatRightTextFill className="text-green-600" />
+            ) : (
+              <BsChatRightText />
+            )}
           </button>
         </Tooltip>
         <Tooltip content="Setting">
