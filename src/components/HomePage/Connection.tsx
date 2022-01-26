@@ -1,4 +1,5 @@
 import React from 'react';
+// const Connection = dynamic(() => import('./Connection'), { ssr: false });
 
 function Connection() {
   return (
