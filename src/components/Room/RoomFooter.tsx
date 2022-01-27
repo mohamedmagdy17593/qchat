@@ -10,8 +10,10 @@ import {
 import { FiMoreVertical, FiSettings, FiUsers } from 'react-icons/fi';
 import Tooltip from '../common/Tooltip/Tooltip';
 import { useRoomDispatch, useRoomState } from './RoomState';
+import { useRouter } from 'next/router';
 
 function RoomFooter() {
+  let router = useRouter();
   let roomState = useRoomState();
   let dispatch = useRoomDispatch();
 
@@ -47,7 +49,12 @@ function RoomFooter() {
           </button>
         </Tooltip>
         <Tooltip content="Leave call">
-          <button className="rounded-full bg-red-500 px-4 py-2 text-2xl text-white hover:shadow-sm hover:shadow-red-500">
+          <button
+            className="rounded-full bg-red-500 px-4 py-2 text-2xl text-white hover:shadow-sm hover:shadow-red-500"
+            onClick={() => {
+              router.push('/');
+            }}
+          >
             <MdCallEnd />
           </button>
         </Tooltip>

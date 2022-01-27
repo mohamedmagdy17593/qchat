@@ -18,7 +18,7 @@ export function useCurrentTime() {
 
 function currentTime() {
   let d = new Date();
-  let s = d.getSeconds();
+  // let s = d.getSeconds();
   let m = d.getMinutes();
   let h = d.getHours();
   let p = h <= 12 ? 'AM' : 'PM';
@@ -32,4 +32,12 @@ function currentTime() {
     ' ' +
     p
   );
+}
+
+export async function getUserMedia() {
+  let stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  });
+  return stream;
 }

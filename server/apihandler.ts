@@ -1,15 +1,12 @@
-import express from 'express';
-import { asyncHandler } from './helpers';
+import { Server, Socket } from 'socket.io';
 
-export const httpApiHandler = express.Router();
+export function apiSocketHandler(io: Server, socket: Socket) {
+  socket.on('create-new-room', (data, cb) => {
+    let id = 'hola';
+    cb(id);
+  });
 
-httpApiHandler.get(
-  '/room/:roomID',
-  asyncHandler((req, res) => {
-    let roomID = req.params.roomID;
-
-    console.log(roomID);
-
-    res.send('');
-  }),
-);
+  socket.on('error', (e) => {
+    console.log('Errorrrr', e);
+  });
+}

@@ -7,7 +7,7 @@ import morgan from 'morgan';
 import { Server, Socket } from 'socket.io';
 import http from 'http';
 
-import { httpApiHandler } from './apihandler';
+import { apiSocketHandler } from './apihandler';
 
 const dev = process.env.NODE_ENV !== 'production';
 const appUi = next({ dev });
@@ -21,7 +21,7 @@ const port = process.env.PORT || 3000;
     const app = express();
     const server = http.createServer(app);
     const io = new Server(server, {
-      cors: { origin: '*', methods: ['GET', 'POST'] },
+      cors: { origin: '*' },
     });
 
     /**
@@ -33,12 +33,8 @@ const port = process.env.PORT || 3000;
 
     io.on('connection', (socket: Socket) => {
       console.log('-- socket connection id #', socket.id);
+      apiSocketHandler(io, socket);
     });
-
-    /**
-     * Routes
-     */
-    app.use(`/api`, httpApiHandler);
 
     /**
      * Handle Nextjs Requests

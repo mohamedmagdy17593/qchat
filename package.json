@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "peer:server": "peerjs --port 9000 --key peerjs --path /peerjs",
-    "dev": "nodemon --exec \"ts-node\" --project tsconfig.server.json server/index.ts",
+    "dev": "nodemon --watch server --exec \"ts-node\" --project tsconfig.server.json server/index.ts",
     "build:server": "tsc --project tsconfig.server.json",
     "build:next": "next build",
     "build": "npm run build:next && npm run build:server",
@@ -27,7 +27,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
-    "socket.io": "^4.4.1"
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1"
   },
   "devDependencies": {
     "@types/node": "17.0.10",
