@@ -8,7 +8,7 @@ function RoomCanvas() {
   let roomState = useRoomState();
 
   useEffect(() => {
-    getUserMedia();
+    // getUserMedia();
   }, []);
 
   return (

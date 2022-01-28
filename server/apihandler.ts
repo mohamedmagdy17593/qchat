@@ -29,8 +29,9 @@ export function apiSocketHandler(io: Server, socket: Socket) {
     let { roomId } = data;
     try {
       socket.emit('room-users', getClientUsers(roomId));
+      cb();
     } catch (e: any) {
-      cb(e.message);
+      cb({ error: e.message });
     }
   });
 

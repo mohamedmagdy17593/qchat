@@ -20,7 +20,7 @@ export const wss = {
     socket.emit('join-room', data, cb);
   },
 
-  onJoiningRoom(roomId: string, cb: (e: any) => void) {
+  onJoiningRoom(roomId: string, cb: (e?: { error: string }) => void) {
     socket.emit('on-joining-room', { roomId }, cb);
   },
 

@@ -35,9 +35,9 @@ function currentTime() {
 }
 
 export async function getUserMedia() {
-  let stream = await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true,
-  });
-  return stream;
+  // let stream = await navigator.mediaDevices.getUserMedia({
+  //   video: true,
+  //   audio: true,
+  // });
+  // return stream;
 }

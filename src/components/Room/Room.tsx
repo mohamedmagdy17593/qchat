@@ -1,27 +1,40 @@
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { wss } from '../../api/socket';
 import { useAppState } from '../AppContext/AppContext';
 import { useRoomId } from './hooks';
 import RoomCanvas from './RoomCanvas';
 import RoomFooter from './RoomFooter';
 import { RoomStateProvider, useRoomDispatch, useRoomState } from './RoomState';
+import { errorToast } from '../../../utils/toast';
 
 function Room() {
   let router = useRouter();
   let roomId = useRoomId();
-
   let dispatch = useRoomDispatch();
   let roomState = useRoomState();
   let { user } = useAppState();
+
+  let [loading, setLoading] = useState(true);
 
   console.log({ roomId, users: roomState.users, user });
 
   useEffect(() => {
     if (roomId) {
-      wss.onJoiningRoom(roomId);
+      wss.onJoiningRoom(roomId, (e) => {
+        if (e) {
+          errorToast(e.error);
+          router.push(`/new`);
+        } else {
+          if (user) {
+            setLoading(false);
+          } else {
+            router.push(`/join?roomId=${roomId}`);
+          }
+        }
+      });
     }
-  }, [roomId]);
+  }, [roomId, router, user]);
 
   useEffect(() => {
     return wss.getRoomUsers((users) => {
@@ -29,8 +42,7 @@ function Room() {
     });
   }, [dispatch]);
 
-  if (!user) {
-    router.push(`/join?roomId=${roomId}`);
+  if (loading) {
     return null;
   }
 
