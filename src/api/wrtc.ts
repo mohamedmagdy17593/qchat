@@ -1,26 +1,24 @@
-import { User } from '../components/Room/RoomState';
+import { globalRoomContextValue, User } from '../components/Room/RoomState';
 import SimplePeer from 'simple-peer';
 import { wss, socket } from './socket';
 
 let peers = new Map<string, SimplePeer.Instance>();
+let stream: MediaStream | null = null;
 
 export const wrtc = {
   peerConnection(users: User[]) {
-    console.log('this codde should run one time');
     users.forEach((user) => {
-      console.log('Inside');
-
       let peer = new SimplePeer({ initiator: true });
-      peers.set(user.id, peer);
+      setUpPeerEvents(peer, { userId: user.id });
+    });
+  },
 
-      peer.on('signal', (data) => {
-        wss.peerConnectWith({ userId: user.id, signal: data });
-      });
-
-      // TODO: Remove
-      peer.on('connect', () => {
-        console.log('HOOOOY');
-      });
+  setStream(_stream: MediaStream) {
+    stream = _stream;
+    peers.forEach((peer) => {
+      if (stream) {
+        peer.addStream(stream);
+      }
     });
   },
 };
@@ -31,17 +29,33 @@ socket.on('peer-connect-signal', ({ userId, signal }) => {
     peer.signal(signal);
   } else {
     let peer = new SimplePeer({});
-    peers.set(userId, peer);
-
-    peer.on('signal', (data) => {
-      wss.peerConnectWith({ userId: userId, signal: data });
-    });
-
+    setUpPeerEvents(peer, { userId });
     peer.signal(signal);
-
-    // TODO: Remove
-    peer.on('connect', () => {
-      console.log('HOOOOY');
-    });
   }
 });
+
+function setUpPeerEvents(
+  peer: SimplePeer.Instance,
+  { userId }: { userId: string },
+) {
+  if (stream) {
+    peer.addStream(stream);
+  }
+
+  peers.set(userId, peer);
+
+  peer.on('signal', (data) => {
+    wss.peerConnectWith({ userId: userId, signal: data });
+  });
+  peer.on('stream', (stream) => {
+    globalRoomContextValue.dispatch({
+      type: 'SET_STREAM_FOR_USER',
+      payload: { userId: userId, stream },
+    });
+  });
+
+  // TODO: Remove
+  peer.on('connect', () => {
+    console.log('HOOOOY', peers);
+  });
+}

@@ -4,6 +4,7 @@ export interface User {
   id: string;
   name: string;
   roomId: string;
+  stream?: MediaStream;
 }
 
 type RightBannerState = 'chat' | 'people' | null;
@@ -18,7 +19,11 @@ type Action =
       type: 'SET_RIGHT_BANNER_STATE';
       payload: { rightBannerState: RightBannerState };
     }
-  | { type: 'SET_USERS'; payload: { users: User[] } };
+  | { type: 'SET_USERS'; payload: { users: User[] } }
+  | {
+      type: 'SET_STREAM_FOR_USER';
+      payload: { userId: string; stream: MediaStream };
+    };
 
 interface RoomContext {
   state: RoomState;
@@ -43,8 +48,23 @@ function roomReducer(state: RoomState, action: Action): RoomState {
         users,
       };
     }
+    case 'SET_STREAM_FOR_USER': {
+      let { userId, stream } = action.payload;
+      let users = state.users.map((user) => {
+        if (user.id === userId) {
+          return { ...user, stream };
+        }
+        return user;
+      });
+      return {
+        ...state,
+        users,
+      };
+    }
   }
 }
+
+export let globalRoomContextValue: RoomContext;
 
 type RoomStateProviderProps = React.PropsWithChildren<{}>;
 export function RoomStateProvider({ children }: RoomStateProviderProps) {
@@ -52,8 +72,10 @@ export function RoomStateProvider({ children }: RoomStateProviderProps) {
     rightBannerState: null,
     users: [],
   } as RoomState);
+  let value = useMemo(() => ({ state, dispatch }), [state]);
+  globalRoomContextValue = value;
   return (
-    <roomContext.Provider value={useMemo(() => ({ state, dispatch }), [state])}>
+    <roomContext.Provider value={globalRoomContextValue}>
       {children}
     </roomContext.Provider>
   );
