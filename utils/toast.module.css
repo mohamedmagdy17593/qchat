@@ -1,0 +1,3 @@
+.error {
+  @apply !max-w-5xl !rounded-md !bg-red-500 !px-4 !py-2 !text-base !text-white !shadow-xl;
+}

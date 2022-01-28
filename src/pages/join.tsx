@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { errorToast } from '../../utils/toast';
 import { wss } from '../api/socket';
 import { useAppState } from '../components/AppContext/AppContext';
 
@@ -15,9 +16,15 @@ function Join() {
     let roomId = form.get('roomId') as string;
     let name = form.get('name') as string;
     let onlyAudio = form.get('onlyAudio') === 'on';
-    wss.joinRoom({ name, roomId }, (roomId, user) => {
-      setUser(user);
-      router.push(`/${roomId}`);
+    wss.joinRoom({ name, roomId }, (data) => {
+      if ('error' in data) {
+        let { error } = data;
+        errorToast(error);
+      } else {
+        let { roomId, user } = data;
+        setUser(user);
+        router.push(`/${roomId}`);
+      }
     });
   }
 

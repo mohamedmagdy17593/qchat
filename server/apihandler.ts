@@ -15,15 +15,25 @@ export function apiSocketHandler(io: Server, socket: Socket) {
   });
 
   socket.on('join-room', (data, cb) => {
-    let { roomId, name } = data;
-    let { room, user } = joinRoom({ roomId, name }, socket);
-    io.to(roomId).emit('room-users', getClientUsers(roomId));
-    cb(room.id, toClientUser(user));
+    try {
+      let { roomId, name } = data;
+      console.log('cb', cb);
+      let { room, user } = joinRoom({ roomId, name }, socket);
+      io.to(roomId).emit('room-users', getClientUsers(roomId));
+      cb;
+      cb({ roomId: room.id, user: toClientUser(user) });
+    } catch (e: any) {
+      cb({ error: e.message });
+    }
   });
 
   socket.on('on-joining-room', (data, cb) => {
     let { roomId } = data;
-    socket.emit('room-users', getClientUsers(roomId));
+    try {
+      socket.emit('room-users', getClientUsers(roomId));
+    } catch (e: any) {
+      cb(e.message);
+    }
   });
 
   socket.on('disconnect', () => {

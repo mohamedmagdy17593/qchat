@@ -15,13 +15,13 @@ export const wss = {
 
   joinRoom(
     data: { name: string; roomId: string },
-    cb: (roomId: string, user: User) => void,
+    cb: (data: { roomId: string; user: User } | { error: string }) => void,
   ) {
     socket.emit('join-room', data, cb);
   },
 
-  onJoiningRoom(roomId: string) {
-    socket.emit('on-joining-room', { roomId });
+  onJoiningRoom(roomId: string, cb: (e: any) => void) {
+    socket.emit('on-joining-room', { roomId }, cb);
   },
 
   getRoomUsers(cb: (users: User[]) => void) {
