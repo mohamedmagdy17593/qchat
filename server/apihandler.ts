@@ -17,10 +17,8 @@ export function apiSocketHandler(io: Server, socket: Socket) {
   socket.on('join-room', (data, cb) => {
     try {
       let { roomId, name } = data;
-      console.log('cb', cb);
       let { room, user } = joinRoom({ roomId, name }, socket);
       io.to(roomId).emit('room-users', getClientUsers(roomId));
-      cb;
       cb({ roomId: room.id, user: toClientUser(user) });
     } catch (e: any) {
       cb({ error: e.message });
@@ -43,6 +41,7 @@ export function apiSocketHandler(io: Server, socket: Socket) {
       let res = disconnectUser(userId);
       if (!res) return;
       let { roomId } = res;
+      socket.leave(roomId);
       io.to(roomId).emit('room-users', getClientUsers(roomId));
     }
   });
