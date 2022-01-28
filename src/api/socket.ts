@@ -15,7 +15,11 @@ export const wss = {
 
   joinRoom(
     data: { name: string; roomId: string },
-    cb: (data: { roomId: string; user: User } | { error: string }) => void,
+    cb: (
+      data:
+        | { roomId: string; user: User; roomUsers: User[] }
+        | { error: string },
+    ) => void,
   ) {
     socket.emit('join-room', data, cb);
   },
@@ -29,5 +33,9 @@ export const wss = {
     return () => {
       socket.off('room-users', cb);
     };
+  },
+
+  peerConnectWith({ userId, signal }: { userId: string; signal: any }) {
+    socket.emit('peer-connect-with', { userId, signal });
   },
 };

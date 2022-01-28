@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { errorToast } from '../../utils/toast';
 import { wss } from '../api/socket';
+import { wrtc } from '../api/wrtc';
 import { useAppState } from '../components/AppContext/AppContext';
 
 function Join() {
@@ -21,7 +22,8 @@ function Join() {
         let { error } = data;
         errorToast(error);
       } else {
-        let { roomId, user } = data;
+        let { roomId, user, roomUsers } = data;
+        wrtc.peerConnection(roomUsers);
         setUser(user);
         router.push(`/${roomId}`);
       }

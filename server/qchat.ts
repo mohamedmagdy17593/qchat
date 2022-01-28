@@ -14,8 +14,8 @@ interface Room {
   users: Set<string>;
 }
 
-let users = new Map<string, User>();
-let rooms = new Map<string, Room>();
+export let users = new Map<string, User>();
+export let rooms = new Map<string, Room>();
 
 export function createRoom(
   hostUser: {
