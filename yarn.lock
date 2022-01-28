@@ -3462,6 +3462,11 @@ undefsafe@^2.0.5:
   resolved "https://registry.yarnpkg.com/undefsafe/-/undefsafe-2.0.5.tgz#38733b9327bdcd226db889fb723a6efd162e6e2c"
   integrity sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==
 
+unique-names-generator@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/unique-names-generator/-/unique-names-generator-4.6.0.tgz#852c1db8149815d6cf665a601820fe80ec2fbc37"
+  integrity sha512-m0fke1emBeT96UYn2psPQYwljooDWRTKt9oUZ5vlt88ZFMBGxqwPyLHXwCfkbgdm8jzioCp7oIpo6KdM+fnUlQ==
+
 unique-string@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/unique-string/-/unique-string-2.0.0.tgz#39c6451f81afb2749de2b233e3f7c5e8843bd89d"

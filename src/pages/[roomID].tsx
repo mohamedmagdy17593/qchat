@@ -1,5 +1,6 @@
+import dynamic from 'next/dynamic';
 import React from 'react';
-import Room from '../components/Room/Room';
+const Room = dynamic(() => import('../components/Room/Room'), { ssr: false });
 
 function RoomPage() {
   return <Room />;

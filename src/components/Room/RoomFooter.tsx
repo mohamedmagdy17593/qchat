@@ -5,14 +5,20 @@ import {
   BsCameraVideo,
   BsChatRightText,
   BsChatRightTextFill,
+  BsFillPeopleFill,
   BsMic,
+  BsPeople,
 } from 'react-icons/bs';
-import { FiMoreVertical, FiSettings, FiUsers } from 'react-icons/fi';
+import { FiMoreVertical, FiSettings } from 'react-icons/fi';
 import Tooltip from '../common/Tooltip/Tooltip';
 import { useRoomDispatch, useRoomState } from './RoomState';
 import { useRouter } from 'next/router';
 
-function RoomFooter() {
+interface RoomFooterProps {
+  roomId: string;
+}
+
+function RoomFooter({ roomId }: RoomFooterProps) {
   let router = useRouter();
   let roomState = useRoomState();
   let dispatch = useRoomDispatch();
@@ -22,7 +28,7 @@ function RoomFooter() {
       <div className="flex items-center gap-4 ">
         <Time />
         <span className="h-4 w-px bg-white"></span>
-        <span>{'asdcf-asd1'}</span>
+        <span>{roomId}</span>
       </div>
 
       <div className="flex gap-3">
@@ -62,8 +68,23 @@ function RoomFooter() {
 
       <div className="flex justify-self-end">
         <Tooltip content="Show everyone">
-          <button className="flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800">
-            <FiUsers />
+          <button
+            className="flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
+            onClick={() => {
+              dispatch({
+                type: 'SET_RIGHT_BANNER_STATE',
+                payload: {
+                  rightBannerState:
+                    roomState.rightBannerState === 'people' ? null : 'people',
+                },
+              });
+            }}
+          >
+            {roomState.rightBannerState === 'people' ? (
+              <BsFillPeopleFill className="text-green-600" />
+            ) : (
+              <BsPeople />
+            )}
           </button>
         </Tooltip>
         <Tooltip content="Chat with everyone">
@@ -71,12 +92,15 @@ function RoomFooter() {
             className="flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
             onClick={() => {
               dispatch({
-                type: 'SET_CHAT_IS_OPEN',
-                payload: { chatIsOpen: !roomState.chatIsOpen },
+                type: 'SET_RIGHT_BANNER_STATE',
+                payload: {
+                  rightBannerState:
+                    roomState.rightBannerState === 'chat' ? null : 'chat',
+                },
               });
             }}
           >
-            {roomState.chatIsOpen ? (
+            {roomState.rightBannerState === 'chat' ? (
               <BsChatRightTextFill className="text-green-600" />
             ) : (
               <BsChatRightText />

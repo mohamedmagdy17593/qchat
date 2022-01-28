@@ -1,27 +1,12 @@
 import React from 'react';
-import { MdOutlineClose, MdSend } from 'react-icons/md';
+import { MdSend } from 'react-icons/md';
 import { useRoomDispatch } from './RoomState';
 
 function ChatBanner() {
   let dispatch = useRoomDispatch();
 
   return (
-    <div className="absolute top-4 right-4 grid h-[calc(100%-16px)] w-[350px] grid-rows-[auto,1fr,auto] rounded bg-white">
-      <div className="flex h-16 items-center justify-between pl-4 pr-2">
-        <div className="text-lg">In-call messages</div>
-        <button
-          className="flex h-12 w-12 items-center justify-center rounded-full hover:bg-neutral-100"
-          onClick={() => {
-            dispatch({
-              type: 'SET_CHAT_IS_OPEN',
-              payload: { chatIsOpen: false },
-            });
-          }}
-        >
-          <MdOutlineClose />
-        </button>
-      </div>
-
+    <div className="grid grid-rows-[1fr,auto]">
       <div></div>
 
       <div className="p-4">

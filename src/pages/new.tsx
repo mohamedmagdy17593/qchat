@@ -1,16 +1,21 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { wss } from '../api/socket';
+import { useAppState } from '../components/AppContext/AppContext';
 
 function NewPage() {
+  let { setUser } = useAppState();
+  let router = useRouter();
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let form = new FormData(e.target as HTMLFormElement);
     let name = form.get('name') as string;
     let onlyAudio = form.get('onlyAudio') === 'on';
-    console.log('createRoom');
-    wss.createRoom({ name }, (id) => {
-      console.log('ddone', id);
+    wss.createRoom({ name }, (roomId, user) => {
+      setUser(user);
+      router.push(`/${roomId}`);
     });
   }
 

@@ -1,10 +1,24 @@
 import React, { useContext, useMemo, useReducer } from 'react';
 
-interface RoomState {
-  chatIsOpen: boolean;
+export interface User {
+  id: string;
+  name: string;
+  roomId: string;
 }
 
-type Action = { type: 'SET_CHAT_IS_OPEN'; payload: { chatIsOpen: boolean } };
+type RightBannerState = 'chat' | 'people' | null;
+
+interface RoomState {
+  rightBannerState: RightBannerState;
+  users: User[];
+}
+
+type Action =
+  | {
+      type: 'SET_RIGHT_BANNER_STATE';
+      payload: { rightBannerState: RightBannerState };
+    }
+  | { type: 'SET_USERS'; payload: { users: User[] } };
 
 interface RoomContext {
   state: RoomState;
@@ -15,11 +29,18 @@ const roomContext = React.createContext<RoomContext | null>(null);
 
 function roomReducer(state: RoomState, action: Action): RoomState {
   switch (action.type) {
-    case 'SET_CHAT_IS_OPEN': {
-      let { chatIsOpen } = action.payload;
+    case 'SET_RIGHT_BANNER_STATE': {
+      let { rightBannerState } = action.payload;
       return {
         ...state,
-        chatIsOpen,
+        rightBannerState,
+      };
+    }
+    case 'SET_USERS': {
+      let { users } = action.payload;
+      return {
+        ...state,
+        users,
       };
     }
   }
@@ -27,7 +48,10 @@ function roomReducer(state: RoomState, action: Action): RoomState {
 
 type RoomStateProviderProps = React.PropsWithChildren<{}>;
 export function RoomStateProvider({ children }: RoomStateProviderProps) {
-  let [state, dispatch] = useReducer(roomReducer, { chatIsOpen: false });
+  let [state, dispatch] = useReducer(roomReducer, {
+    rightBannerState: null,
+    users: [],
+  } as RoomState);
   return (
     <roomContext.Provider value={useMemo(() => ({ state, dispatch }), [state])}>
       {children}

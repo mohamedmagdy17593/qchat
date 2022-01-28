@@ -1,8 +1,8 @@
 import React from 'react';
-import ChatBanner from './ChatBanner';
 import { useRoomState } from './RoomState';
 import { useEffect } from 'react';
 import { getUserMedia } from './utils';
+import RightBanner from './RightBanner';
 
 function RoomCanvas() {
   let roomState = useRoomState();
@@ -14,7 +14,7 @@ function RoomCanvas() {
   return (
     <div className="relative">
       <div></div>
-      {roomState.chatIsOpen && <ChatBanner />}
+      {roomState.rightBannerState != null && <RightBanner />}
     </div>
   );
 }

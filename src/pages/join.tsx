@@ -1,14 +1,24 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { wss } from '../api/socket';
+import { useAppState } from '../components/AppContext/AppContext';
 
 function Join() {
+  let { setUser } = useAppState();
+  let router = useRouter();
+  let roomId = router.query.roomId;
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     let form = new FormData(e.target as HTMLFormElement);
-    let roomID = form.get('roomID');
-    let name = form.get('name');
+    let roomId = form.get('roomId') as string;
+    let name = form.get('name') as string;
     let onlyAudio = form.get('onlyAudio') === 'on';
-    console.log(roomID, name, onlyAudio);
+    wss.joinRoom({ name, roomId }, (roomId, user) => {
+      setUser(user);
+      router.push(`/${roomId}`);
+    });
   }
 
   return (
@@ -20,17 +30,18 @@ function Join() {
           <div className="mt-8 flex w-full flex-col items-center gap-5">
             <div className="group relative h-16 w-full">
               <label
-                htmlFor="roomID"
+                htmlFor="roomId"
                 className="absolute top-3 left-4 text-xs font-medium text-neutral-500 group-focus-within:text-green-600"
               >
                 Room ID
               </label>
 
               <input
-                name="roomID"
-                id="roomID"
+                name="roomId"
+                id="roomId"
                 type="text"
                 placeholder="Enter room ID"
+                defaultValue={roomId}
                 className="absolute inset-0 w-full rounded-lg border border-neutral-600 bg-transparent px-4 pb-4 pt-10 text-white placeholder:text-neutral-700 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm"
               />
             </div>
