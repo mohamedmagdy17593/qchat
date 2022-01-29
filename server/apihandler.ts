@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { users, usersSetToUsers } from './qchat';
+import { leaveRoom, users, usersSetToUsers } from './qchat';
 import {
   createRoom,
   disconnectUser,
@@ -54,15 +54,11 @@ export function apiSocketHandler(io: Server, socket: Socket) {
     },
   );
 
+  socket.on('leave-room', () => {
+    leaveRoom(socket, io);
+  });
+
   socket.on('disconnect', () => {
-    // @ts-ignore
-    let userId = socket.userId;
-    if (userId) {
-      let res = disconnectUser(userId);
-      if (!res) return;
-      let { roomId } = res;
-      socket.leave(roomId);
-      io.to(roomId).emit('room-users', getClientUsers(roomId));
-    }
+    leaveRoom(socket, io);
   });
 }

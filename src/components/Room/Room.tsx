@@ -43,6 +43,12 @@ function Room() {
     });
   }, [dispatch]);
 
+  useEffect(() => {
+    return () => {
+      wss.disconnect();
+    };
+  }, []);
+
   if (loading) {
     return null;
   }

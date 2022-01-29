@@ -47,6 +47,7 @@ function setUpPeerEvents(
   peer.on('signal', (data) => {
     wss.peerConnectWith({ userId: userId, signal: data });
   });
+
   peer.on('stream', (stream) => {
     globalRoomContextValue.dispatch({
       type: 'SET_STREAM_FOR_USER',
@@ -54,8 +55,13 @@ function setUpPeerEvents(
     });
   });
 
-  // TODO: Remove
-  peer.on('connect', () => {
-    console.log('HOOOOY', peers);
+  peer.on('error', (err) => {
+    console.log('peer -- error', err);
+  });
+
+  peer.on('close', () => {
+    console.log('peer -- close', userId);
+    peer.destroy();
+    peers.delete(userId);
   });
 }

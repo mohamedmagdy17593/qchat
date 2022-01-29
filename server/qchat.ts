@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { getRoomID } from './helpers';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 interface User {
   name: string;
@@ -90,6 +90,18 @@ export function disconnectUser(userId: string) {
   }
 
   return { roomId: room.id };
+}
+
+export function leaveRoom(socket: Socket, io: Server) {
+  // @ts-ignore
+  let userId = socket.userId;
+  if (userId) {
+    let res = disconnectUser(userId);
+    if (!res) return;
+    let { roomId } = res;
+    socket.leave(roomId);
+    io.to(roomId).emit('room-users', getClientUsers(roomId));
+  }
 }
 
 // chat room helpers

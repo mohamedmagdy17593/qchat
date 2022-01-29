@@ -38,4 +38,8 @@ export const wss = {
   peerConnectWith({ userId, signal }: { userId: string; signal: any }) {
     socket.emit('peer-connect-with', { userId, signal });
   },
+
+  disconnect() {
+    socket.emit('leave-room');
+  },
 };
