@@ -19,7 +19,11 @@ function Room() {
 
   let [loading, setLoading] = useState(true);
 
-  console.log({ roomId, users: roomState.users, user });
+  console.log({
+    roomId,
+    users: roomState.users,
+    user,
+  });
 
   useEffect(() => {
     if (roomId) {

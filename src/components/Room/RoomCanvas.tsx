@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import RightBanner from './RightBanner';
 import { wrtc } from '../../api/wrtc';
 import { useAppState } from '../AppContext/AppContext';
+import clsx from 'clsx';
 
 function RoomCanvas() {
   let dispatch = useRoomDispatch();
@@ -27,8 +28,15 @@ function RoomCanvas() {
   }, [dispatch, me]);
 
   return (
-    <div className="relative">
-      <div className="flex flex-wrap gap-4">
+    <div className="relative h-[calc(100vh-80px)] w-full">
+      <div
+        className={clsx(
+          'grid h-full w-full grid-cols-[repeat(auto-fit,minmax(450px,1fr))] grid-rows-[repeat(auto-fit,minmax(300px,1fr))] place-items-center items-center justify-center gap-4',
+          {
+            'pr-[366px]': roomState.rightBannerState != null,
+          },
+        )}
+      >
         {roomState.users.map((user) => {
           return <Video key={user.id} user={user} />;
         })}
@@ -70,13 +78,19 @@ function Video({ user }: VideoProps) {
   }, [isMe, user.stream]);
 
   return (
-    <video
-      style={{
-        width: 300,
-        height: 160,
-        border: isMe ? '1px solid red' : '1px solid black',
-      }}
-      ref={videoRef}
-    />
+    <div
+      className={clsx(
+        'relative aspect-video max-h-full w-full max-w-full rounded p-4',
+        {
+          'border border-green-500': isMe,
+        },
+      )}
+    >
+      <video className="h-full w-full" ref={videoRef} />
+
+      <span className="absolute left-4 bottom-4 text-white">
+        {isMe ? 'You' : user.name}
+      </span>
+    </div>
   );
 }
