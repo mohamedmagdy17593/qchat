@@ -1,12 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { leaveRoom, users, usersSetToUsers } from './qchat';
-import {
-  createRoom,
-  disconnectUser,
-  getClientUsers,
-  joinRoom,
-  toClientUser,
-} from './qchat';
+import { createRoom, getClientUsers, joinRoom, toClientUser } from './qchat';
 
 export function apiSocketHandler(io: Server, socket: Socket) {
   socket.on('create-new-room', (data, cb) => {
@@ -42,15 +36,17 @@ export function apiSocketHandler(io: Server, socket: Socket) {
   socket.on(
     'peer-connect-with',
     ({ userId, signal }: { userId: string; signal: any }) => {
-      // @ts-ignore
-      let socketUserId = socket.userId;
-      let user = users.get(userId);
-      console.log('user', user);
-      if (!user) return;
-      io.to(user.socketId).emit('peer-connect-signal', {
-        userId: socketUserId,
-        signal,
-      });
+      try {
+        // @ts-ignore
+        let socketUserId = socket.userId;
+        let user = users.get(userId);
+        console.log('user', user);
+        if (!user) return;
+        io.to(user.socketId).emit('peer-connect-signal', {
+          userId: socketUserId,
+          signal,
+        });
+      } catch {}
     },
   );
 

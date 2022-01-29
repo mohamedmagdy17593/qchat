@@ -93,15 +93,17 @@ export function disconnectUser(userId: string) {
 }
 
 export function leaveRoom(socket: Socket, io: Server) {
-  // @ts-ignore
-  let userId = socket.userId;
-  if (userId) {
-    let res = disconnectUser(userId);
-    if (!res) return;
-    let { roomId } = res;
-    socket.leave(roomId);
-    io.to(roomId).emit('room-users', getClientUsers(roomId));
-  }
+  try {
+    // @ts-ignore
+    let userId = socket.userId;
+    if (userId) {
+      let res = disconnectUser(userId);
+      if (!res) return;
+      let { roomId } = res;
+      socket.leave(roomId);
+      io.to(roomId).emit('room-users', getClientUsers(roomId));
+    }
+  } catch {}
 }
 
 // chat room helpers
