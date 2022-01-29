@@ -21,6 +21,11 @@ export const wrtc = {
       }
     });
   },
+
+  disconnect() {
+    peers = new Map();
+    stream = null;
+  },
 };
 
 socket.on('peer-connect-signal', ({ userId, signal }) => {

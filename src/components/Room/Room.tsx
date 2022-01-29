@@ -8,6 +8,7 @@ import RoomCanvas from './RoomCanvas';
 import RoomFooter from './RoomFooter';
 import { RoomStateProvider, useRoomDispatch, useRoomState } from './RoomState';
 import { errorToast } from '../../../utils/toast';
+import { wrtc } from '../../api/wrtc';
 
 function Room() {
   let router = useRouter();
@@ -46,6 +47,7 @@ function Room() {
   useEffect(() => {
     return () => {
       wss.disconnect();
+      wrtc.disconnect();
     };
   }, []);
 
