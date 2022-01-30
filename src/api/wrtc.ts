@@ -1,6 +1,7 @@
 import { globalRoomContextValue, User } from '../components/Room/RoomState';
 import SimplePeer from 'simple-peer';
 import { wss, socket } from './socket';
+import { globalAppContext } from '../components/AppContext/AppContext';
 
 let peers = new Map<string, SimplePeer.Instance>();
 let stream: MediaStream | null = null;
@@ -19,6 +20,17 @@ export const wrtc = {
       if (stream) {
         peer.addStream(stream);
       }
+    });
+  },
+
+  sendMessage(message: string) {
+    peers.forEach((peer) => {
+      peer.send(JSON.stringify({ type: 'chat-message', message }));
+    });
+
+    globalRoomContextValue.dispatch({
+      type: 'NEW_MESSAGE',
+      payload: { userId: globalAppContext.user!.id, message },
     });
   },
 
@@ -62,6 +74,19 @@ function setUpPeerEvents(
       type: 'SET_STREAM_FOR_USER',
       payload: { userId: userId, stream },
     });
+  });
+
+  peer.on('data', (d) => {
+    let action = JSON.parse(d);
+    switch (action.type) {
+      case 'chat-message': {
+        let message = action.message;
+        globalRoomContextValue.dispatch({
+          type: 'NEW_MESSAGE',
+          payload: { userId, message },
+        });
+      }
+    }
   });
 
   peer.on('error', (err) => {
