@@ -6,12 +6,9 @@ import { wrtc } from '../../api/wrtc';
 import { useAppState } from '../AppContext/AppContext';
 import clsx from 'clsx';
 import { useForceUpdate, useMyRoomUser } from './hooks';
-import {
-  BsCameraVideoOff,
-  BsCameraVideoOffFill,
-  BsMicMute,
-  BsMicMuteFill,
-} from 'react-icons/bs';
+import { BsCameraVideoOffFill, BsMicMuteFill } from 'react-icons/bs';
+import AudioViz from './AudioViz';
+import { useAudioViz } from './AudioViz';
 
 function RoomCanvas() {
   let dispatch = useRoomDispatch();
@@ -93,10 +90,6 @@ function Video({ user }: VideoProps) {
 
   let hasVideo = user.stream?.getVideoTracks()[0].enabled && user.camera;
   let hasAudio = user.audio;
-  let userCharLogo = useMemo(
-    () => user.name.trim()[0]?.toUpperCase(),
-    [user.name],
-  );
 
   useEffect(() => {
     if (!user.stream) {
@@ -136,19 +129,40 @@ function Video({ user }: VideoProps) {
       <div className="absolute top-5 right-5 flex gap-2 text-neutral-500">
         {!user.camera && <BsCameraVideoOffFill />}
         {!user.audio && <BsMicMuteFill />}
+        {user.audio && <AudioViz user={user} />}
       </div>
 
       {/* audio only logo */}
-      {!hasVideo && (
-        <div className="absolute top-1/2 left-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-green-500 text-4xl text-white">
-          {userCharLogo}
-        </div>
-      )}
+      {!hasVideo && <UserLogo user={user} />}
 
       {/* user name */}
       <span className="absolute left-4 bottom-4 text-white">
         {isMe ? 'You' : user.name}
       </span>
+    </div>
+  );
+}
+
+interface UserLogoProps {
+  user: User;
+}
+
+function UserLogo({ user }: UserLogoProps) {
+  let userCharLogo = useMemo(
+    () => user.name.trim()[0]?.toUpperCase(),
+    [user.name],
+  );
+
+  let scaleValue = useAudioViz({ user, scale: 3 });
+
+  return (
+    <div className="absolute top-1/2 left-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-green-500 text-4xl text-white">
+      {userCharLogo}
+
+      <div
+        className="absolute inset-0 h-full w-full rounded-full bg-green-600/10"
+        style={{ transform: `scale(${scaleValue})` }}
+      ></div>
     </div>
   );
 }
