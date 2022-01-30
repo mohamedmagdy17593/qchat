@@ -5,6 +5,8 @@ export interface User {
   name: string;
   roomId: string;
   stream?: MediaStream;
+  audio: boolean;
+  camera: boolean;
 }
 
 type RightBannerState = 'chat' | 'people' | null;
@@ -45,7 +47,10 @@ function roomReducer(state: RoomState, action: Action): RoomState {
       let { users } = action.payload;
       return {
         ...state,
-        users,
+        users: users.map((user) => {
+          let oldUser = state.users.find((u) => u.id === user.id);
+          return { ...oldUser, ...user };
+        }),
       };
     }
     case 'SET_STREAM_FOR_USER': {

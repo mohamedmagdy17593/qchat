@@ -1,15 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useRoomState, useRoomDispatch, User } from './RoomState';
 import { useEffect } from 'react';
 import RightBanner from './RightBanner';
 import { wrtc } from '../../api/wrtc';
 import { useAppState } from '../AppContext/AppContext';
 import clsx from 'clsx';
+import { useForceUpdate, useMyRoomUser } from './hooks';
+import {
+  BsCameraVideoOff,
+  BsCameraVideoOffFill,
+  BsMicMute,
+  BsMicMuteFill,
+} from 'react-icons/bs';
 
 function RoomCanvas() {
   let dispatch = useRoomDispatch();
   let { user: me } = useAppState();
   let roomState = useRoomState();
+
+  let forceUpdate = useForceUpdate();
+  let myRoomUser = useMyRoomUser();
 
   useEffect(() => {
     navigator.mediaDevices
@@ -23,9 +33,33 @@ function RoomCanvas() {
           type: 'SET_STREAM_FOR_USER',
           payload: { userId: me!.id, stream },
         });
+
+        // @ts-ignore
+        window.stream = stream;
+
         wrtc.setStream(stream);
       });
   }, [dispatch, me]);
+
+  useLayoutEffect(() => {
+    if (myRoomUser?.stream) {
+      let stream = myRoomUser.stream;
+
+      /**
+       * Note:
+       * using force update to validate any stream checks in children components
+       */
+
+      if (stream.getAudioTracks()[0].enabled !== myRoomUser.audio) {
+        stream.getAudioTracks()[0].enabled = myRoomUser.audio;
+        forceUpdate();
+      }
+      if (stream.getVideoTracks()[0].enabled !== myRoomUser.camera) {
+        stream.getVideoTracks()[0].enabled = myRoomUser.camera;
+        forceUpdate();
+      }
+    }
+  }, [forceUpdate, myRoomUser?.audio, myRoomUser?.camera, myRoomUser?.stream]);
 
   return (
     <div className="relative h-[calc(100vh-80px)] w-full">
@@ -57,6 +91,13 @@ function Video({ user }: VideoProps) {
   let videoRef = useRef<HTMLVideoElement>(null);
   let isMe = me!.id === user.id;
 
+  let hasVideo = user.stream?.getVideoTracks()[0].enabled && user.camera;
+  let hasAudio = user.audio;
+  let userCharLogo = useMemo(
+    () => user.name.trim()[0]?.toUpperCase(),
+    [user.name],
+  );
+
   useEffect(() => {
     if (!user.stream) {
       return;
@@ -75,7 +116,7 @@ function Video({ user }: VideoProps) {
       video.muted = true;
     }
     video.play();
-  }, [isMe, user.stream]);
+  }, [isMe, user.stream, hasVideo]);
 
   return (
     <div
@@ -86,8 +127,25 @@ function Video({ user }: VideoProps) {
         },
       )}
     >
-      <video className="h-full w-full" ref={videoRef} />
+      <video
+        className={clsx('h-full w-full', { 'sr-only': !hasVideo })}
+        ref={videoRef}
+      />
 
+      {/* right icons */}
+      <div className="absolute top-5 right-5 flex gap-2 text-neutral-500">
+        {!user.camera && <BsCameraVideoOffFill />}
+        {!user.audio && <BsMicMuteFill />}
+      </div>
+
+      {/* audio only logo */}
+      {!hasVideo && (
+        <div className="absolute top-1/2 left-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-green-500 text-4xl text-white">
+          {userCharLogo}
+        </div>
+      )}
+
+      {/* user name */}
       <span className="absolute left-4 bottom-4 text-white">
         {isMe ? 'You' : user.name}
       </span>

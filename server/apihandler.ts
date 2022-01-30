@@ -1,5 +1,6 @@
 import { Server, Socket } from 'socket.io';
-import { leaveRoom, users, usersSetToUsers } from './qchat';
+import { User } from '../src/components/Room/RoomState';
+import { leaveRoom, rooms, users, usersSetToUsers } from './qchat';
 import { createRoom, getClientUsers, joinRoom, toClientUser } from './qchat';
 
 export function apiSocketHandler(io: Server, socket: Socket) {
@@ -49,6 +50,23 @@ export function apiSocketHandler(io: Server, socket: Socket) {
       } catch {}
     },
   );
+
+  socket.on('change-user-state', (data: Partial<User>) => {
+    try {
+      // @ts-ignore
+      let socketUserId = socket.userId;
+      let user = users.get(socketUserId);
+      if (!user) {
+        return;
+      }
+
+      // update user state
+      Object.assign(user, data);
+
+      let roomId = user.roomId;
+      io.to(roomId).emit('room-users', getClientUsers(roomId));
+    } catch {}
+  });
 
   socket.on('leave-room', () => {
     leaveRoom(socket, io);

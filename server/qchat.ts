@@ -7,6 +7,8 @@ interface User {
   id: string;
   socketId: string;
   roomId: string;
+  camera: boolean;
+  audio: boolean;
 }
 
 interface Room {
@@ -30,6 +32,8 @@ export function createRoom(
     name: hostUser.name,
     roomId,
     socketId: socket.id,
+    camera: true,
+    audio: true,
   };
 
   let room: Room = {
@@ -60,6 +64,8 @@ export function joinRoom(
     name,
     roomId,
     socketId: socket.id,
+    camera: true,
+    audio: true,
   };
 
   room.users.add(user.id);
@@ -126,6 +132,8 @@ export function toClientUser(user: User) {
     id: user.id,
     name: user.name,
     roomId: user.roomId,
+    audio: user.audio,
+    camera: user.camera,
   };
 }
 

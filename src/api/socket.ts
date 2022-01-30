@@ -13,6 +13,10 @@ export const wss = {
     socket.emit('create-new-room', data, cb);
   },
 
+  changeUserState(data: Partial<User>) {
+    socket.emit('change-user-state', data);
+  },
+
   joinRoom(
     data: { name: string; roomId: string },
     cb: (
