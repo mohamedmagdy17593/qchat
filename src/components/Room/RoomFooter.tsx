@@ -99,7 +99,7 @@ function RoomFooter({ roomId }: RoomFooterProps) {
       <div className="flex justify-self-end">
         <Tooltip content="Show everyone">
           <button
-            className="flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
+            className="relative flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
             onClick={() => {
               dispatch({
                 type: 'SET_RIGHT_BANNER_STATE',
@@ -115,6 +115,10 @@ function RoomFooter({ roomId }: RoomFooterProps) {
             ) : (
               <BsPeople />
             )}
+
+            <span className="absolute top-0 right-0  flex h-4 w-4 items-center justify-center rounded-full bg-neutral-600 text-[10px]">
+              {roomState.users.length}
+            </span>
           </button>
         </Tooltip>
         <Tooltip content="Chat with everyone">

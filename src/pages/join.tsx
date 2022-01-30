@@ -46,6 +46,7 @@ function Join() {
               </label>
 
               <input
+                required
                 name="roomId"
                 id="roomId"
                 type="text"
@@ -64,6 +65,7 @@ function Join() {
               </label>
 
               <input
+                required
                 name="name"
                 id="name"
                 type="text"

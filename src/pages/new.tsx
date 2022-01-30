@@ -35,6 +35,7 @@ function NewPage() {
               </label>
 
               <input
+                required
                 name="name"
                 id="name"
                 type="text"
