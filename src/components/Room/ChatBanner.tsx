@@ -1,15 +1,14 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { MdSend } from 'react-icons/md';
-import { wss } from '../../api/socket';
-import { User, useRoomDispatch, useRoomState, Message } from './RoomState';
+import { useRoomState, Message } from './RoomState';
 import { wrtc } from '../../api/wrtc';
 import clsx from 'clsx';
-import { useMyRoomUser } from './hooks';
 import { useAppState } from '../AppContext/AppContext';
 import { format } from 'date-fns';
 
 function ChatBanner() {
   let inputRef = useRef<HTMLInputElement>(null);
+  let chatWrapperRef = useRef<HTMLDivElement>(null);
   let roomState = useRoomState();
 
   function sendMessage() {
@@ -20,9 +19,31 @@ function ChatBanner() {
     }
   }
 
+  let chatHeightCheckRef = useRef(true);
+
+  useEffect(() => {
+    if (chatHeightCheckRef.current) {
+      let chatWrapper = chatWrapperRef.current!;
+      chatWrapper.scrollTo({
+        top: chatWrapper.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [roomState.chat]);
+
   return (
     <div className="grid max-h-full min-h-full grid-rows-[1fr,auto]">
-      <div className="flex max-h-full flex-col gap-4 overflow-y-auto p-4">
+      <div
+        ref={chatWrapperRef}
+        className="flex max-h-full flex-col gap-4 overflow-y-auto p-4"
+        onScroll={(e) => {
+          let chatWrapper = e.target as HTMLDivElement;
+          let atTheEnd =
+            chatWrapper.offsetHeight + chatWrapper.scrollTop >=
+            chatWrapper.scrollHeight - 10;
+          chatHeightCheckRef.current = atTheEnd;
+        }}
+      >
         {roomState.chat.map((message, i) => {
           return <MessageRow key={i} message={message} />;
         })}
@@ -65,7 +86,6 @@ interface MessageRowProps {
 function MessageRow({ message }: MessageRowProps) {
   let { user: me } = useAppState();
   let roomState = useRoomState();
-  message.userId = me!.id;
 
   let messageUser = useMemo(
     () => roomState.users.find((user) => user.id === message.userId),
