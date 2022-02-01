@@ -38,7 +38,7 @@ export function useKeyboardShortcuts() {
         e.preventDefault();
         wss.changeUserState({ audio: !myRoomUser?.audio });
       },
-      // toggle audio
+      // toggle camera
       '$mod+KeyE'(e) {
         e.preventDefault();
         wss.changeUserState({ camera: !myRoomUser?.camera });
