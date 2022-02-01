@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { wss } from '../../api/socket';
 import { useAppState } from '../AppContext/AppContext';
-import { useRoomId } from './hooks';
+import { useKeyboardShortcuts, useRoomId } from './hooks';
 import RoomCanvas from './RoomCanvas';
 import RoomFooter from './RoomFooter';
 import { RoomStateProvider, useRoomDispatch, useRoomState } from './RoomState';
@@ -24,6 +24,8 @@ function Room() {
     users: roomState.users,
     user,
   });
+
+  useKeyboardShortcuts();
 
   useEffect(() => {
     if (roomId) {
