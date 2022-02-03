@@ -9,7 +9,7 @@ function RightBanner() {
   let roomState = useRoomState();
 
   return (
-    <div className="absolute top-4 right-4 grid h-[calc(100%-16px)] w-[350px] grid-rows-[auto,1fr] rounded bg-white text-neutral-900">
+    <div className="absolute inset-4 grid h-[calc(100%-16px)] w-[calc(100%-32px)] grid-rows-[auto,1fr] rounded  bg-white text-neutral-900 md:top-4 md:right-4 md:w-[350px]">
       <div className="flex h-16 items-center justify-between pl-4 pr-2">
         <div className="text-lg">
           {roomState.rightBannerState === 'chat'

@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <RadixTooltip.Provider>
         <SEO />
         <div className="min-h-screen w-full bg-neutral-900 selection:bg-green-600 selection:text-white">
-          <Component {...pageProps} />;
+          <Component {...pageProps} />
         </div>
         <Toaster />
       </RadixTooltip.Provider>
