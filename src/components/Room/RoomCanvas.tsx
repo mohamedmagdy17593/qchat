@@ -9,6 +9,8 @@ import { useForceUpdate, useMyRoomUser } from './hooks';
 import { BsCameraVideoOffFill, BsMicMuteFill } from 'react-icons/bs';
 import AudioViz from './AudioViz';
 import { useAudioViz } from './AudioViz';
+import { useMediaQuery } from 'react-responsive';
+import { breakpoints } from '../common/Media/Media';
 
 function RoomCanvas() {
   let dispatch = useRoomDispatch();
@@ -17,6 +19,7 @@ function RoomCanvas() {
 
   let forceUpdate = useForceUpdate();
   let myRoomUser = useMyRoomUser();
+  let isMd = useMediaQuery({ minWidth: breakpoints.md });
 
   useEffect(() => {
     navigator.mediaDevices
@@ -60,18 +63,34 @@ function RoomCanvas() {
 
   return (
     <div className="relative h-[calc(100vh-80px)] w-full">
-      <div
-        className={clsx(
-          'grid h-full w-full grid-cols-[repeat(auto-fit,minmax(450px,1fr))] grid-rows-[repeat(auto-fit,minmax(300px,1fr))] place-items-center items-center justify-center gap-4',
-          {
-            'pr-[366px]': roomState.rightBannerState != null,
-          },
-        )}
-      >
-        {/* {roomState.users.map((user) => {
-          return <Video key={user.id} user={user} />;
-        })} */}
-      </div>
+      {isMd ? (
+        // Tablet
+        <div
+          className={clsx(
+            'grid h-full w-full grid-cols-[repeat(auto-fit,minmax(450px,1fr))] grid-rows-[repeat(auto-fit,minmax(300px,1fr))] place-items-center items-center justify-center gap-4',
+            {
+              'pr-[366px]': roomState.rightBannerState != null,
+            },
+          )}
+        >
+          {roomState.users.map((user) => {
+            return <Video key={user.id} user={user} />;
+          })}
+        </div>
+      ) : (
+        // Mobile
+        roomState.rightBannerState == null && (
+          <div
+            className={clsx(
+              'grid h-full w-full place-items-center items-center justify-center gap-4',
+            )}
+          >
+            {roomState.users.map((user) => {
+              return <Video key={user.id} user={user} />;
+            })}
+          </div>
+        )
+      )}
       {roomState.rightBannerState != null && <RightBanner />}
     </div>
   );
