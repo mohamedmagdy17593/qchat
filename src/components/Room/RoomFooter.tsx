@@ -21,6 +21,7 @@ import clsx from 'clsx';
 import { useMyRoomUser } from './hooks';
 import { useMediaQuery } from 'react-responsive';
 import { breakpoints } from '../common/Media/Media';
+import { Dropdown } from '../common/Dropdown/Dropdown';
 
 interface RoomFooterProps {
   roomId: string;
@@ -33,6 +34,25 @@ function RoomFooter({ roomId }: RoomFooterProps) {
   let myRoomUser = useMyRoomUser();
 
   let isMd = useMediaQuery({ minWidth: breakpoints.md });
+
+  function handlePeopleClick() {
+    dispatch({
+      type: 'SET_RIGHT_BANNER_STATE',
+      payload: {
+        rightBannerState:
+          roomState.rightBannerState === 'people' ? null : 'people',
+      },
+    });
+  }
+
+  function handleChatClick() {
+    dispatch({
+      type: 'SET_RIGHT_BANNER_STATE',
+      payload: {
+        rightBannerState: roomState.rightBannerState === 'chat' ? null : 'chat',
+      },
+    });
+  }
 
   return (
     <div className="grid h-20 w-screen select-none grid-cols-[1fr,1fr] items-center gap-4 px-5 text-white  sm:grid-cols-[1fr,auto,1fr]">
@@ -106,15 +126,7 @@ function RoomFooter({ roomId }: RoomFooterProps) {
           <Tooltip content="Show everyone">
             <button
               className="relative flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
-              onClick={() => {
-                dispatch({
-                  type: 'SET_RIGHT_BANNER_STATE',
-                  payload: {
-                    rightBannerState:
-                      roomState.rightBannerState === 'people' ? null : 'people',
-                  },
-                });
-              }}
+              onClick={handlePeopleClick}
             >
               {roomState.rightBannerState === 'people' ? (
                 <BsFillPeopleFill className="text-green-600" />
@@ -130,15 +142,7 @@ function RoomFooter({ roomId }: RoomFooterProps) {
           <Tooltip content="Chat with everyone">
             <button
               className="flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
-              onClick={() => {
-                dispatch({
-                  type: 'SET_RIGHT_BANNER_STATE',
-                  payload: {
-                    rightBannerState:
-                      roomState.rightBannerState === 'chat' ? null : 'chat',
-                  },
-                });
-              }}
+              onClick={handleChatClick}
             >
               {roomState.rightBannerState === 'chat' ? (
                 <BsChatRightTextFill className="text-green-600" />
@@ -155,14 +159,47 @@ function RoomFooter({ roomId }: RoomFooterProps) {
         </div>
       ) : (
         <div className="flex justify-self-end">
-          <Tooltip content="More">
+          <Dropdown
+            items={[
+              {
+                label: 'Show everyone',
+                icon: (
+                  <div className="relative">
+                    {roomState.rightBannerState === 'people' ? (
+                      <BsFillPeopleFill className="text-green-600" />
+                    ) : (
+                      <BsPeople />
+                    )}
+                    <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-neutral-600/20 text-[10px] text-neutral-600">
+                      {roomState.users.length}
+                    </span>
+                  </div>
+                ),
+                onClick: handlePeopleClick,
+              },
+              {
+                label: 'Chat with everyone',
+                icon:
+                  roomState.rightBannerState === 'chat' ? (
+                    <BsChatRightTextFill className="text-green-600" />
+                  ) : (
+                    <BsChatRightText />
+                  ),
+                onClick: handleChatClick,
+              },
+              {
+                label: 'Setting',
+                icon: <FiSettings />,
+              },
+            ]}
+          >
             <button
               className=" flex h-12 w-12 items-center justify-center rounded-full text-2xl text-white hover:bg-neutral-800"
               onClick={() => {}}
             >
               <IoIosArrowUp />
             </button>
-          </Tooltip>
+          </Dropdown>
         </div>
       )}
     </div>

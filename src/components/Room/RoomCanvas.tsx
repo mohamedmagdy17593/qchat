@@ -68,9 +68,9 @@ function RoomCanvas() {
           },
         )}
       >
-        {roomState.users.map((user) => {
+        {/* {roomState.users.map((user) => {
           return <Video key={user.id} user={user} />;
-        })}
+        })} */}
       </div>
       {roomState.rightBannerState != null && <RightBanner />}
     </div>
