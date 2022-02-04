@@ -25,8 +25,6 @@ function Room() {
     user,
   });
 
-  useKeyboardShortcuts();
-
   useEffect(() => {
     if (roomId) {
       wss.onJoiningRoom(roomId, (e) => {
@@ -63,10 +61,18 @@ function Room() {
 
   return (
     <div className="grid h-screen select-none grid-rows-[1fr,auto]">
+      <RoomLoad />
+
       <RoomCanvas />
       <RoomFooter roomId={roomId} />
     </div>
   );
+}
+
+function RoomLoad() {
+  useKeyboardShortcuts();
+
+  return null;
 }
 
 export default function RoomWrapper() {

@@ -64,7 +64,7 @@ function RoomCanvas() {
   return (
     <div className="relative h-[calc(100vh-80px)] w-full">
       {isMd ? (
-        // Tablet
+        // Desktop
         <div
           className={clsx(
             'grid h-full w-full grid-cols-[repeat(auto-fit,minmax(450px,1fr))] grid-rows-[repeat(auto-fit,minmax(300px,1fr))] place-items-center items-center justify-center gap-4',
