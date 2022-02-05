@@ -26,7 +26,16 @@ export function apiSocketHandler(io: Server, socket: Socket) {
 
   socket.on('on-joining-room', (data, cb) => {
     let { roomId } = data;
+    // @ts-ignore
+    let socketUserId = socket.userId;
     try {
+      let room = rooms.get(roomId);
+      if (!room) {
+        throw Error(`No room found with this id`);
+      }
+      if (!room.users.has(socketUserId) && room.users.size >= 4) {
+        throw Error(`This room is full try to join again latter`);
+      }
       socket.emit('room-users', getClientUsers(roomId));
       cb();
     } catch (e: any) {

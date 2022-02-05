@@ -67,7 +67,7 @@ function RoomCanvas() {
         // Desktop
         <div
           className={clsx(
-            'grid h-full w-full grid-cols-[repeat(auto-fit,minmax(450px,1fr))] grid-rows-[repeat(auto-fit,minmax(300px,1fr))] place-items-center items-center justify-center gap-4',
+            'grid h-full w-full grid-cols-[repeat(auto-fit,minmax(400px,1fr))] grid-rows-[repeat(auto-fit,minmax(300px,1fr))]  place-items-center items-center justify-center gap-4 xl:grid-cols-[repeat(auto-fit,minmax(630px,1fr))]',
             {
               'pr-[366px]': roomState.rightBannerState != null,
             },
@@ -82,7 +82,7 @@ function RoomCanvas() {
         roomState.rightBannerState == null && (
           <div
             className={clsx(
-              'grid h-full w-full place-items-center items-center justify-center gap-4',
+              'grid h-full w-full place-items-center items-center justify-center gap-4 overflow-auto',
             )}
           >
             {roomState.users.map((user) => {
