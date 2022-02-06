@@ -82,7 +82,7 @@ function RoomCanvas() {
         roomState.rightBannerState == null && (
           <div
             className={clsx(
-              'grid h-full w-full place-items-center items-center justify-center gap-4 overflow-auto',
+              'grid h-full w-full grid-cols-1 place-items-center items-center justify-center gap-4 overflow-auto',
             )}
           >
             {roomState.users.map((user) => {
