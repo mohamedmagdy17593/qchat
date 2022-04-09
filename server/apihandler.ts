@@ -50,7 +50,6 @@ export function apiSocketHandler(io: Server, socket: Socket) {
         // @ts-ignore
         let socketUserId = socket.userId;
         let user = users.get(userId);
-        console.log('user', user);
         if (!user) return;
         io.to(user.socketId).emit('peer-connect-signal', {
           userId: socketUserId,

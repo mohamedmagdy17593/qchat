@@ -78,10 +78,6 @@ function setUpPeerEvents(
     wss.peerConnectWith({ userId: userId, signal: data });
   });
 
-  peer.on('connect', () => {
-    console.log('CONNECT', userId);
-  });
-
   peer.on('stream', (stream) => {
     globalRoomContextValue.dispatch({
       type: 'SET_STREAM_FOR_USER',

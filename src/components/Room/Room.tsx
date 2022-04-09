@@ -14,16 +14,9 @@ function Room() {
   let router = useRouter();
   let roomId = useRoomId();
   let dispatch = useRoomDispatch();
-  let roomState = useRoomState();
   let { user } = useAppState();
 
   let [loading, setLoading] = useState(true);
-
-  console.log({
-    roomId,
-    users: roomState.users,
-    user,
-  });
 
   useEffect(() => {
     if (roomId) {
