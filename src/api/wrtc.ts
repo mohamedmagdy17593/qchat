@@ -2,7 +2,6 @@ import { globalRoomContextValue, User } from '../components/Room/RoomState';
 import SimplePeer from 'simple-peer';
 import { wss, socket } from './socket';
 import { globalAppContext } from '../components/AppContext/AppContext';
-import { stuns } from './stuns';
 
 let peers = new Map<string, SimplePeer.Instance>();
 let stream: MediaStream | null = null;
