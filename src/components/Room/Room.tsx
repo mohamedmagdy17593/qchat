@@ -6,7 +6,7 @@ import { useAppState } from '../AppContext/AppContext';
 import { useKeyboardShortcuts, useRoomId } from './hooks';
 import RoomCanvas from './RoomCanvas';
 import RoomFooter from './RoomFooter';
-import { RoomStateProvider, useRoomDispatch, useRoomState } from './RoomState';
+import { RoomStateProvider, useRoomDispatch } from './RoomState';
 import { errorToast } from '../../../utils/toast';
 import { wrtc } from '../../api/wrtc';
 
