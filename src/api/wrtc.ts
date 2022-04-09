@@ -12,16 +12,6 @@ export const wrtc = {
     users.forEach((user) => {
       let peer = new SimplePeer({
         initiator: true,
-        config: {
-          iceServers: [
-            // ...stuns.map((s) => ({ urls: `stun:${s}` })),
-            {
-              urls: 'turn:numb.viagenie.ca',
-              username: 'webrtc@live.com',
-              credential: 'muazkh',
-            },
-          ],
-        },
       });
       setUpPeerEvents(peer, { userId: user.id });
     });
