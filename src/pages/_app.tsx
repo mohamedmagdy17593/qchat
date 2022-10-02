@@ -6,6 +6,7 @@ import { AppContext } from '../components/AppContext/AppContext';
 import { Toaster } from 'react-hot-toast';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  console.log('--- start app ---');
   return (
     <AppContext>
       <RadixTooltip.Provider>
